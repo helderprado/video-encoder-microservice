@@ -39,10 +39,10 @@ func NewDbTest() *gorm.DB {
 	}
 
 	return connection
-
 }
 
 func (d *Database) Connect() (*gorm.DB, error) {
+
 	var err error
 
 	if d.Env != "test" {
