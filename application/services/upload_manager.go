@@ -130,7 +130,7 @@ func (vu *VideoUpload) uploadWorker(in chan int, returnChan chan string, uploadC
 		returnChan <- ""
 	}
 
-	returnChan <- "upload complete"
+	returnChan <- "upload completed"
 
 }
 

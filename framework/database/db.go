@@ -65,4 +65,5 @@ func (d *Database) Connect() (*gorm.DB, error) {
 	}
 
 	return d.Db, nil
+
 }

@@ -55,7 +55,7 @@ func (j *JobService) Start() error {
 	err = j.performUpload()
 
 	if err != nil {
-		return err
+		return j.failJob(err)
 	}
 
 	err = j.changeJobStatus("FINISHING")
@@ -67,17 +67,16 @@ func (j *JobService) Start() error {
 	err = j.VideoService.Finish()
 
 	if err != nil {
-		return err
+		return j.failJob(err)
 	}
 
 	err = j.changeJobStatus("COMPLETED")
 
 	if err != nil {
-		return err
+		return j.failJob(err)
 	}
 
 	return nil
-
 }
 
 func (j *JobService) performUpload() error {
@@ -97,7 +96,6 @@ func (j *JobService) performUpload() error {
 	go videoUpload.ProcessUpload(concurrency, doneUpload)
 
 	var uploadResult string
-
 	uploadResult = <-doneUpload
 
 	if uploadResult != "upload completed" {
@@ -105,18 +103,16 @@ func (j *JobService) performUpload() error {
 	}
 
 	return err
-
 }
 
 func (j *JobService) changeJobStatus(status string) error {
-
 	var err error
 
 	j.Job.Status = status
 	j.Job, err = j.JobRepository.Update(j.Job)
 
 	if err != nil {
-		return err
+		return j.failJob(err)
 	}
 
 	return nil
